@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -62,8 +63,20 @@ export default {
     doLogin() {
       this.$validator.validate().then(valid => {
         if (valid) {
-          alert("可以使用哦");
-        } else {
+          //点击按钮发送axios请求获取数据
+          axios
+            .post(`http://ttapi.research.itcast.cn/app/v1_0/authorizations`, {
+              mobile: this.mobile,
+              code: this.code
+            })
+            .then(res => {
+              console.log(res);
+              //返回一个带有token的字符串
+              //将token存储到localstorage中,然后跳转到主页即可
+              let user= res.data.data.token;
+              window.localStorage.getItem('token',JSON.stringify(user));
+              this.$router.push('/home')
+            });
         }
       });
     }
