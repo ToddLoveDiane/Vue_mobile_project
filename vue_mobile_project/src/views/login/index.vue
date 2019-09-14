@@ -9,21 +9,27 @@
         left-icon="contact"
         clearable
         required
-        label="用户名"
+        label="手机号"
         placeholder="请输入正确的手机号"
+        v-validate="'required'"
+        name="mobile"
       />
+      <span>{{ errors.first('mobile') }}</span>
       <van-field
         v-model="code"
         left-icon="eye-o"
         type="text"
-        label="密码"
+        label="验证码"
         placeholder="请输入验证码"
         required
+        v-validate="'required'"
+        name="code"
       />
+      <span>{{ errors.first('code') }}</span>
     </van-cell-group>
     <!-- 按钮 -->
     <div class="mybtn">
-      <van-button type="info" size="large">登录</van-button>
+      <van-button type="info" size="large" @click="doLogin">登录</van-button>
     </div>
   </div>
 </template>
@@ -32,9 +38,38 @@
 export default {
   data() {
     return {
-      mobile: "",
-      code: ""
+      mobile: "18888888888",
+      code: "246810"
     };
+  },
+  methods: {
+    myrule() {
+      //自定义验证规则
+      const dict = {
+        // 自定义规则
+        custom: {
+          // 定义 age 的规则:age 规则的名称
+          mobile: {
+            required: "请输入手机号"
+          },
+          code: {
+            required: () => "请输入验证码"
+          }
+        }
+      };
+      this.$validator.localize("zh_CN", dict);
+    },
+    doLogin() {
+      this.$validator.validate().then(valid => {
+        if (valid) {
+          alert("可以使用哦");
+        } else {
+        }
+      });
+    }
+  },
+  mounted() {
+    this.myrule();
   }
 };
 </script>
