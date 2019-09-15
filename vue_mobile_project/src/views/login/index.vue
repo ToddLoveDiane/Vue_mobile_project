@@ -29,18 +29,19 @@
     </van-cell-group>
     <!-- 按钮 -->
     <div class="mybtn">
-      <van-button type="info" size="large" @click="doLogin">登录</van-button>
+      <van-button :loading="isLoading" type="info" size="large" @click="doLogin">登录</van-button>
     </div>
   </div>
 </template>
 
 <script>
-import userLogin from "@/api/userInfo.js";
+import { userLogin } from "@/api/userInfo.js";
 export default {
   data() {
     return {
       mobile: "18888888888",
-      code: "246810"
+      code: "246810",
+      isLoading: false
     };
   },
   methods: {
@@ -60,26 +61,27 @@ export default {
       };
       this.$validator.localize("zh_CN", dict);
     },
-    doLogin() {
-      // 0.0 完成手机号与验证码的校验
-      this.$validator.validate().then(async valid => {
-        if (valid) {
-          console.log("校验成功");
-          // 1. 请求登录接口，提交数据
-          // 1.1 通过异步请求将数据提交到服务器
-          try {
-            let res = await userLogin({
-              mobile: this.mobile,
-              code: this.code
-            });
-            this.$store.commit("setStore", res);
-            alert('你成功啦')
-            // this.$router.push("/home");
-          } catch (error) {
-            console.log(error);
-          }
+    async doLogin() {
+      this.isLoading = true;
+      //因为这个this.$validator.validate()也是promise对象,await表示t成功后执行的then方法
+      let valid = await this.$validator.validate();
+      if (valid) {
+        // console.log("校验成功");
+        // 1. 请求登录接口，提交数据
+        // 1.1 通过异步请求将数据提交到服务器
+        try {
+          let res = await userLogin({
+            mobile: this.mobile,
+            code: this.code
+          });
+          this.$store.commit("setStore", res);
+          this.$router.push("/home");
+        } catch (error) {
+          this.$toast.fail("登录失败,请重试");
+          console.log(error);
         }
-      });
+      }
+      this.isLoading = false;
     }
   },
   mounted() {

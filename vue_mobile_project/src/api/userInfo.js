@@ -10,10 +10,12 @@ function userLogin({
         method: 'post',
         url: "v1_0/authorizations",
         data: {
-            mobile:mobile,
-            code:code
+            mobile: mobile,
+            code: code
         }
     });
 }
-//3.暴露接口
-export default userLogin
+//3.暴露接口 如果没有写default就用{}对象
+export {
+    userLogin
+}
