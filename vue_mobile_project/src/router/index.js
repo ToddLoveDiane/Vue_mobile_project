@@ -5,11 +5,15 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  routes: [
+  routes: [{
+      name: 'login',
+      path: '/login',
+      component: () => import('@/views/login')
+    },
     {
-      name:'login',
-      path:'/login',
-      component:()=>import('@/views/login')
+      name: 'home',
+      path: '/home',
+      component: () => import('@/views/home')
     }
   ]
 })

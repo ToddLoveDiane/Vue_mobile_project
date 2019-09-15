@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import userLogin from "@/api/userInfo.js";
 export default {
   data() {
     return {
@@ -61,22 +61,23 @@ export default {
       this.$validator.localize("zh_CN", dict);
     },
     doLogin() {
-      this.$validator.validate().then(valid => {
+      // 0.0 完成手机号与验证码的校验
+      this.$validator.validate().then(async valid => {
         if (valid) {
-          //点击按钮发送axios请求获取数据
-          axios
-            .post(`http://ttapi.research.itcast.cn/app/v1_0/authorizations`, {
+          console.log("校验成功");
+          // 1. 请求登录接口，提交数据
+          // 1.1 通过异步请求将数据提交到服务器
+          try {
+            let res = await userLogin({
               mobile: this.mobile,
               code: this.code
-            })
-            .then(res => {
-              console.log(res);
-              //返回一个带有token的字符串
-              //将token存储到localstorage中,然后跳转到主页即可
-              let user= res.data.data.token;
-              window.localStorage.getItem('token',JSON.stringify(user));
-              this.$router.push('/home')
             });
+            this.$store.commit("setStore", res);
+            alert('你成功啦')
+            // this.$router.push("/home");
+          } catch (error) {
+            console.log(error);
+          }
         }
       });
     }
