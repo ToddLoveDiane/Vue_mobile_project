@@ -2,15 +2,11 @@
   <div class="home">
     <!-- 头部 -->
     <van-nav-bar title="首页" />
-    <!-- 标签栏 -->
-    <!-- 频道+列表栏 -->
+    <!-- channel -->
     <van-tabs v-model="active">
-      <van-tab title="标签 1">
-        <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="onLoad">
-          <van-cell v-for="item in list" :key="item" :title="item" />
-        </van-list>
-      </van-tab>
-      <div class="myicon" @click="showPop" slot="nav-right">
+      <van-tab v-for="(item,index) in channelList" :key="index" :title="item.name"></van-tab>
+      <!-- icon -->
+      <div class="myicon" slot="nav-right">
         <van-icon name="wap-nav" />
       </div>
     </van-tabs>
@@ -31,44 +27,41 @@
 </template>
 
 <script>
+import { userchannel } from "@/api/channel";
 export default {
   data() {
     return {
       active: 0,
-      list: [
-        1,
-        2,
-        3,
-        4,
-        5,
-        6,
-        7,
-        8,
-        9,
-        10,
-        11,
-        12,
-        13,
-        14,
-        15,
-        16,
-        17,
-        18,
-        19,
-        20
-      ],
       loading: false,
       finished: false,
-      show: false
+      show: false,
+      channelList: []
     };
   },
   methods: {
-    onload() {
-      console.log(1);
-    },
-    showPop() {
-      this.show = true;
+    //获取频道数据
+    async getChannel() {
+      //拿到所有的数据
+      let res = this.$store.state;
+      if (res) {
+        let user = await userchannel();
+        this.channelList = user.channels;
+      } else {
+        //没有登录,查看缓存中是否有
+        let user = JSON.parse(window.localStorage.getItem("channel"));
+        if (user) {
+          //如果有设置,就直接赋值
+          this.channelList = user;
+        } else {
+          //没登录没设置
+          let user = await userchannels();
+          this.channelList = user.channels;
+        }
+      }
     }
+  },
+  mounted() {
+    this.getChannel();
   }
 };
 </script>

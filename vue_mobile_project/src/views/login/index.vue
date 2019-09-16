@@ -91,6 +91,9 @@ export default {
 </script>
 
 <style lang='less' scoped>
+.mylogin {
+  margin-top: 50px;
+}
 .myhead {
   background-color: #3296fa;
 }

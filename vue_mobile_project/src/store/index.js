@@ -11,7 +11,10 @@ export default new Vuex.Store({
   },
   mutations: {
     setStore(state, user) {
-      author.setToken(user)
+      //保存用户的数据,存储到Localstorage中
+      author.setToken(user);
+      //将用户的信息更新
+      state.user = user;
     }
   },
   actions: {

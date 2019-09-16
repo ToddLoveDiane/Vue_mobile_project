@@ -1,7 +1,7 @@
 //对token的封装
 //定义键
 const valueKey = 'user'
-//1.设置token
+//1.保存token
 function setToken(value) {
     return window.localStorage.setItem(valueKey, JSON.stringify(value))
 }
