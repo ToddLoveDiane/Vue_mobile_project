@@ -9,7 +9,7 @@ export default new Router({
       path: '/',
       redirect: '/home'
     },
-    { //进来以后先加载下面这个
+    { //进来后先加载/bottom,后加载它的子组件
       path: '/',
       component: () => import('@/views/bottom'),
       children: [{

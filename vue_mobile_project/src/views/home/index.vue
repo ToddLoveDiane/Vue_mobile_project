@@ -57,6 +57,12 @@ export default {
       //1.获取当前频道的对象
       let mychannel = this.channelList[this.myactive];
       let channel_id = mychannel.id;
+      //如果为null说明数据不存在,设置属性
+      if (mychannel.pre_timestamp === null) {
+        mychannel.finished = true;
+        mychannel.uploading = false;
+        return;
+      }
       //2.判断是否为第一次刷新,请求的历史时间戳为0,没有刷新
       if (mychannel.pre_timestamp === 0) {
         //没有刷新就请求数据
@@ -83,9 +89,9 @@ export default {
         mychannel.articlelist = [...mychannel.articlelist, ...res.results];
         //动态刷新数据
         this.channelList = [...this.channelList];
-        //继续设置时间戳
+        //继续设置时间戳:这是切换频道时保证时间戳不为Null
         mychannel.pre_timestamp = res.pre_timestamp;
-        //默认刷新
+        //这个不能抽取出来,因为两个的res是不一样的,而且作用域也不一样
         mychannel.refreshloading = false;
         mychannel.uploading = false;
       }
@@ -94,20 +100,12 @@ export default {
     async onRefresh(item) {
       //拿到当前频道的id
       let mychannel = this.channelList[this.myactive];
-      mychannel.articlelist = [];
-      mychannel.finished = false;
-      mychannel.uploading = false;
-      mychannel.pre_timestamp = 0;
-      //手动加载数据
-      let res = await getArticle({
-        channel_id: mychannel.id,
-        timestamp: Date.now(),
-        with_top: 1
-      });
-      mychannel.article = res.results;
-      mychannel.pre_timestamp = res.pre_timestamp;
-      mychannel.refreshLoading = false;
-      this.channelList = [...this.channelList];
+      //每次下拉刷新就清空数组,重新渲染数据
+      this.$set(mychannel, "articlelist", []);
+      this.$set(mychannel, "finished", false);
+      this.$set(mychannel, "uploading", false);
+      this.$set(mychannel, "pre_timestamp", 0);
+      this.onLoad();
     },
     //获取频道数据
     async getChannel() {
@@ -133,12 +131,13 @@ export default {
     },
     //动态添加属性
     setData() {
+      //forEach动态遍历属性
       this.channelList.forEach(item => {
-        item.articlelist = [];
-        item.uploading = false;
-        item.refreshloading = false;
-        item.finished = false;
-        item.pre_timestamp = 0;
+        this.$set(item, "articlelist", []);
+        this.$set(item, "uploading", false);
+        this.$set(item, "refreshloading", false);
+        this.$set(item, "finished", false);
+        this.$set(item, "pre_timestamp", 0);
       });
     },
     // 将弹出层显示
