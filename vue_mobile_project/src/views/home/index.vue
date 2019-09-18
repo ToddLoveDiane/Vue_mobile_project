@@ -7,14 +7,35 @@
       <van-tab v-for="(item,index) in channelList" :key="index" :title="item.name">
         <!-- 下拉刷新组件 -->
         <van-pull-refresh v-model="item.refreshloading" @refresh="onRefresh(item)">
-          <!-- 列表组件 -->
+          <!-- list组件 -->
           <van-list
             v-model="item.uploading"
             :finished="item.finished"
             finished-text="没有更多了"
             @load="onLoad"
           >
-            <van-cell v-for="(data,index) in item.articlelist" :key="index" :title="data.title" />
+            <van-cell v-for="(data,index) in item.articlelist" :key="index" :title="data.title">
+              <!-- data为undefined原因是没有把下面遍历的结构放到cell里面,把单标签改为双标签即可 -->
+              <template slot="label">
+                <van-grid v-if="data.cover.type>0" :border="false" :column-num="3">
+                  <van-grid-item v-for="(image,index) in data.cover.images" :key="index">
+                    <van-image :src="image" />
+                  </van-grid-item>
+                </van-grid>
+                <!-- 下面是品论 -->
+                <!-- 下方的span -->
+                <div class="mymess">
+                  <div class="left">
+                    <span>{{ data.aut_name }}</span>
+                    <span>评论 {{ data.comm_count}}</span>
+                    <span>{{ data.pubdate | timeformat}}</span>
+                  </div>
+                  <div class="right">
+                    <van-icon name="close" />
+                  </div>
+                </div>
+              </template>
+            </van-cell>
           </van-list>
         </van-pull-refresh>
       </van-tab>
@@ -24,18 +45,6 @@
       </div>
     </van-tabs>
     <!-- 弹出框 -->
-    <van-popup @click="showModel" v-model="show" position="bottom" :style="{ height: '80%' }">
-      <van-grid>
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-        <van-grid-item icon="photo-o" text="文字" />
-      </van-grid>
-    </van-popup>
   </div>
 </template>
 
@@ -71,14 +80,13 @@ export default {
           timestamp: Date.now(),
           with_top: 1
         });
+        console.log(res);
+
         mychannel.articlelist = res.results;
         //动态刷新channellist
         this.channelList = [...this.channelList];
         //设置时间戳
         mychannel.pre_timestamp = res.pre_timestamp;
-        //默认刷新
-        mychannel.refreshloading = false;
-        mychannel.uploading = false;
       } else {
         let res = await getArticle({
           channel_id: channel_id,
@@ -91,10 +99,9 @@ export default {
         this.channelList = [...this.channelList];
         //继续设置时间戳:这是切换频道时保证时间戳不为Null
         mychannel.pre_timestamp = res.pre_timestamp;
-        //这个不能抽取出来,因为两个的res是不一样的,而且作用域也不一样
-        mychannel.refreshloading = false;
-        mychannel.uploading = false;
       }
+      mychannel.refreshloading = false;
+      mychannel.uploading = false;
     },
     //下拉刷新
     async onRefresh(item) {
@@ -143,7 +150,8 @@ export default {
     // 将弹出层显示
     showModel() {
       this.show = true;
-    }
+    },
+    
   },
   mounted() {
     this.getChannel();
@@ -168,7 +176,14 @@ export default {
   top: 63px;
   right: 10px;
 }
-.van-cell {
-  height: 100px;
+
+.mymess {
+  display: flex;
+  justify-content: space-between;
+  .left {
+    span {
+      margin-right: 10px;
+    }
+  }
 }
 </style>
