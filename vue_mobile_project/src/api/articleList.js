@@ -52,9 +52,21 @@ function blackList(autId) {
         }
     })
 }
+
+//模糊搜索
+function likeKeyWord(key){
+    return request({
+        url:'v1_0/suggestion',
+        method:'GET',
+        params:{
+            q:key
+        }
+    })
+}
 export {
     getArticle,
     hideArticle,
     reportArticle,
-    blackList
+    blackList,
+    likeKeyWord
 }
