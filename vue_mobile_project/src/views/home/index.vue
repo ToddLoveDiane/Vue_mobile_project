@@ -19,7 +19,7 @@
               <template slot="label">
                 <van-grid v-if="data.cover.type>0" :border="false" :column-num="3">
                   <van-grid-item v-for="(image,index) in data.cover.images" :key="index">
-                    <van-image :src="image" />
+                    <van-image :src="image" lazy-load />
                   </van-grid-item>
                 </van-grid>
                 <!-- 下面是品论 -->
@@ -31,7 +31,8 @@
                     <span>{{ data.pubdate | timeformat}}</span>
                   </div>
                   <div class="right">
-                    <van-icon name="close" />
+                    <van-icon name="close" @click="showDialog(data.aut_id,data.art_id)" />
+                    <!-- 这里可以传入作者和文章的id -->
                   </div>
                 </div>
               </template>
@@ -44,21 +45,27 @@
         <van-icon name="wap-nav" />
       </div>
     </van-tabs>
-    <!-- 弹出框 -->
+    <!-- 对话框,接受子组件传过来的值 -->
+    <mydialog v-model="hideDialog" @hideEle="hideEle" :authorId="authorId" :articleId="articleId"></mydialog>
   </div>
 </template>
 
 <script>
 import { userchannel } from "@/api/channel";
 import { getArticle } from "@/api/articleList";
+import mydialog from "@/views/home/dialog";
 export default {
   data() {
     return {
       myactive: 0,
       show: false,
-      channelList: []
+      channelList: [],
+      hideDialog: false,
+      authorId: 0,
+      articleId: 0
     };
   },
+  components: { mydialog },
   methods: {
     //上拉刷新load
     async onLoad() {
@@ -151,7 +158,25 @@ export default {
     showModel() {
       this.show = true;
     },
-    
+    //传值给dialog组件
+    showDialog(autId, artId) {
+      this.authorId = autId;
+      this.hideDialog = true;
+      this.articleId = artId;
+    },
+    //删除文章
+    hideEle(artId) {
+      let res = this.channelList[this.myactive].article;
+      console.log(res);
+      //先遍历数组
+      article.forEach(item, index => {
+        //id相等则删除
+        if (item.art_id === artId) {
+          res.splice(index, 1);
+          return;
+        }
+      });
+    }
   },
   mounted() {
     this.getChannel();

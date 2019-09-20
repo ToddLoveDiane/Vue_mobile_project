@@ -1,6 +1,6 @@
-//获取文章列表的封装
 import request from '@/utils/request'
 
+//获取文章列表的封装
 function getArticle({
     channel_id,
     timestamp,
@@ -16,7 +16,45 @@ function getArticle({
         }
     })
 }
+//隐藏文章列表
+function hideArticle(artId) {
+    return request({
+        url: 'v1_0/article/dislikes',
+        method: 'POST',
+        data: {
+            target: artId
+        }
+    })
+}
+//完成举报
+function reportArticle({
+    target,
+    type
+}) {
+    return request({
+        url: 'v1_0/article/reports',
+        method: 'POST',
+        data: {
+            target: target,
+            type: type,
+            remark: 'Valar Moghulis'
+        }
+    })
+}
 
+//拉黑文章
+function blackList(autId) {
+    return request({
+        url:'v1_0/user/blacklists',
+        method:'POST',
+        data:{
+            target:autId
+        }
+    })
+}
 export {
-    getArticle
+    getArticle,
+    hideArticle,
+    reportArticle,
+    blackList
 }

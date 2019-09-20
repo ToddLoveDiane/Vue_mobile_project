@@ -8,6 +8,7 @@ import zh_CN from 'vee-validate/dist/locale/zh_CN';
 import Vant from 'vant';
 import 'dayjs/locale/zh-cn'
 import 'vant/lib/index.css';
+import { Lazyload } from 'vant';
 Vue.use(Vant);
 //使用validate
 import VeeValidate, {
@@ -20,7 +21,9 @@ Vue.use(VeeValidate, {
 //修改
 Validator.localize('zh_CN', zh_CN);
 //dayjs
-dayjs.locale('zh-cn')
+dayjs.locale('zh-cn');
+Vue.use(Lazyload);
+
 import relativeTime from 'dayjs/plugin/relativeTime'
 //定义一个全局的过滤器
 Vue.filter('timeformat',value=>{
