@@ -27,6 +27,10 @@ export default new Router({
       path:'/search',
       component:()=>import('@/views/search')
     },
-
+    {
+      name:'arlist',
+      path:'/arlist/:key',
+      component:()=>import('@/views/arlist')
+    },
   ]
 })

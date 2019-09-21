@@ -63,10 +63,23 @@ function likeKeyWord(key){
         }
     })
 }
+//搜索关键字
+function searchKey({page,per_page,key}){
+return request({
+    url:'v1_0/search',
+    method:'GET',
+    params:{
+        page,
+        per_page,
+        q:key
+    }
+})
+}
 export {
     getArticle,
     hideArticle,
     reportArticle,
     blackList,
-    likeKeyWord
+    likeKeyWord,
+    searchKey
 }

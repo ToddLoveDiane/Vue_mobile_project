@@ -38,7 +38,8 @@
         icon="search"
       >
         <template slot="right-icon">
-          <van-icon name="close" @click="delOne" />
+          <van-icon name="close" @click.stop="delOne" />
+          <!-- stop修饰符的作用是防止点击事件的继续传播 -->
         </template>
       </van-cell>
     </van-cell-group>
@@ -71,7 +72,8 @@ export default {
       this.keyStorage = [...new Set(this.keyStorage)];
       //3.保存到本地
       window.localStorage.setItem("search", JSON.stringify(this.keyStorage));
-      //
+      //跳转到list列表
+      this.$router.push(`/arlist/${keyword}`)
     },
     delAll() {
       this.keyStorage = [];
