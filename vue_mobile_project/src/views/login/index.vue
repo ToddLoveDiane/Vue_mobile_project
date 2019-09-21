@@ -75,12 +75,15 @@ export default {
             code: this.code
           });
           this.$store.commit("setStore", res);
-          this.$router.push("/home");
+          // this.$router.push("/home");
+          //这里的home路径不能写死,需要返回到上一级
+          this.$router.back();
         } catch (error) {
           this.$toast.fail("登录失败,请重试");
           console.log(error);
         }
       }
+
       this.isLoading = false;
     }
   },

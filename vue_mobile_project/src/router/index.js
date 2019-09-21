@@ -32,5 +32,10 @@ export default new Router({
       path:'/arlist/:key',
       component:()=>import('@/views/arlist')
     },
+    {
+      name:'detail',
+      path:'/detail/:art_id',
+      component:()=>import('@/views/detail')
+    },
   ]
 })

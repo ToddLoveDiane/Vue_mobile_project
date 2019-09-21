@@ -45,35 +45,40 @@ function reportArticle({
 //拉黑文章
 function blackList(autId) {
     return request({
-        url:'v1_0/user/blacklists',
-        method:'POST',
-        data:{
-            target:autId
+        url: 'v1_0/user/blacklists',
+        method: 'POST',
+        data: {
+            target: autId
         }
     })
 }
 
 //模糊搜索
-function likeKeyWord(key){
+function likeKeyWord(key) {
     return request({
-        url:'v1_0/suggestion',
-        method:'GET',
-        params:{
-            q:key
+        url: 'v1_0/suggestion',
+        method: 'GET',
+        params: {
+            q: key
         }
     })
 }
 //搜索关键字
-function searchKey({page,per_page,key}){
-return request({
-    url:'v1_0/search',
-    method:'GET',
-    params:{
-        page,
-        per_page,
-        q:key
-    }
-})
+function searchKey({
+    page,
+    per_page,
+    key
+}) {
+    return request({
+        url: 'v1_0/search',
+        method: 'GET',
+        params: {
+            page,
+            per_page,
+            q: key
+        }
+    })
+
 }
 export {
     getArticle,
@@ -81,5 +86,5 @@ export {
     reportArticle,
     blackList,
     likeKeyWord,
-    searchKey
+    searchKey,
 }

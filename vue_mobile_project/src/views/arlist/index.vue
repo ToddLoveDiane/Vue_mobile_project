@@ -1,7 +1,7 @@
 <template>
   <div class="list">
     <!-- 导航头部 -->
-    <van-nav-bar fixed title="搜索列表" left-arrow  @click-left="$router.back()" />
+    <van-nav-bar fixed title="搜索列表" left-arrow @click-left="$router.back()" />
     <!-- router.back回到上一个页面 -->
     <div id="top"></div>
     <!-- 列表集合 -->
@@ -9,7 +9,7 @@
       <van-cell-group>
         <van-cell :title="item.aut_name" v-for="(item, index) in dataList" :key="index">
           <template slot="label">
-            {{ item.title }}
+            <div @click="toDetail(item.art_id)">{{ item.title }}</div>
             <van-grid :column-num="3">
               <van-grid-item @click="comment" text="评论" />
               <van-grid-item text="点赞" />
@@ -19,7 +19,6 @@
         </van-cell>
       </van-cell-group>
     </van-list>
-    <a class="mylink" href="#top">点击跳转到头部</a>
   </div>
 </template>
 
@@ -48,6 +47,8 @@ export default {
           per_page: this.per_page,
           key: this.key
         });
+        console.log(res);
+
         //数组的扩增
         this.dataList = [...this.dataList, ...res.results];
         //判断是否拉完
@@ -59,9 +60,12 @@ export default {
         console.log(error);
       }
     },
-    comment(){
+    comment() {
       //判断用户是否登录,如果登录可以,没有登录跳转到登录页面
-      this.$gLogin()
+      this.$login();
+    },
+    toDetail(art_id) {
+      this.$router.push("/detail/" + art_id);
     }
   }
 };
