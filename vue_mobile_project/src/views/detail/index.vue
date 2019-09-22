@@ -13,11 +13,11 @@
     <!-- 文章内容不需要抽取 -->
     <van-cell>
       <template slot="title">
-        <div class="article" v-html="articleList.content"></div>
+        <div class="article">打篮球乌克兰的气味进口的环境空气温度和却看见我的空间千万别的空间千万别的空间</div>
       </template>
     </van-cell>
     <!-- 点赞和喜欢按钮 -->
-    <likebtn :obj="articleList"></likebtn>
+    <likebtn></likebtn>
     <!--评论专区 -->
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadComment">
       <div v-for="(item, index) in 5" :key="index">
