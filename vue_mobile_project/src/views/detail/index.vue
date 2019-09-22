@@ -13,20 +13,20 @@
     <!-- 文章内容不需要抽取 -->
     <van-cell>
       <template slot="title">
-        <div class="article">打篮球乌克兰的气味进口的环境空气温度和却看见我的空间千万别的空间千万别的空间</div>
+        <div class="article" v-html="articleList.content"></div>
       </template>
     </van-cell>
     <!-- 点赞和喜欢按钮 -->
-    <likebtn></likebtn>
+    <likebtn :obj="articleList"></likebtn>
     <!--评论专区 -->
     <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadComment">
-      <div v-for="(item, index) in 5" :key="index">
-        <comment></comment>
+      <div v-for="(item, index) in commentList" :key="index">
+        <comment :arComment="item"></comment>
       </div>
     </van-list>
 
-    <!-- 输入专区 -->
-    <inputarea></inputarea>
+    <!-- 发送文章评论专区 -->
+    <inputarea :obj="articleList" @getMyData="articleData"></inputarea>
   </div>
 </template>
 
@@ -36,6 +36,7 @@ import likebtn from "@/views/detail/components/likebtn";
 import comment from "@/views/detail/components/comment";
 import inputarea from "@/views/detail/components/inputarea";
 import { getDetail } from "@/api/articleList";
+import { getComment } from "@/api/comment";
 
 export default {
   components: {
@@ -49,8 +50,10 @@ export default {
       loading: false,
       finished: false,
       artId: this.$route.params.art_id,
-      articleList: {},
       // 保存文章的详情
+      articleList: {},
+      //保存评论
+      commentList: []
     };
   },
   methods: {
@@ -64,12 +67,26 @@ export default {
         this.$toast.fail("网络超时,请重新加载哦");
       }
     },
+    //获取文章评论数据
     loadComment() {
       console.log(111);
+    },
+    articleData(value) {
+      this.commentList.unshift({
+        ...value.new_obj,
+        art_id: value.art_id,
+        com_id: value.com_id
+      });
+      //解构对象,并且添加2个新的属性
+      console.log(111111);
+      console.log(this.commentList);
+      
+      
     }
   },
   mounted() {
     this.getArticleDetail();
+    this.articleData()
   }
 };
 </script>

@@ -5,33 +5,39 @@
         <div class="bar">
           <!-- 图片 -->
           <div class="img">
-            <img
-              src="https://static.zhihu.com/heifetz/assets/apple-touch-icon-152.67c7b278.png"
-              alt
-            />
+            <img :src="arComment.aut_photo" alt />
           </div>
           <!-- 用户名 -->
           <div class="nickname">
             <van-cell>
-              <template slot="title">我吃西红柿</template>
+              <template slot="title">{{arComment.aut_name}}</template>
             </van-cell>
           </div>
           <!-- 点赞按钮 -->
           <div class="btn">
             <van-cell>
-              <van-icon name="good-job-o" />9999
+              <van-icon name="good-job-o" />
+              {{arComment.like_count}}
             </van-cell>
           </div>
           <!-- 评论 -->
         </div>
-        <div class="mycontent">111111111111111111111111111</div>
+        <div class="mycontent">
+          <div>{{arComment.content}}</div>
+          <div>
+            <span style="margin-right:10px">{{arComment.pubdate|dateformat}}</span>
+            <span>回复 ({{ arComment.reply_count }})</span>
+          </div>
+        </div>
       </template>
     </van-cell>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["arComment"]
+};
 </script>
 
 <style lang='less' scoped>
