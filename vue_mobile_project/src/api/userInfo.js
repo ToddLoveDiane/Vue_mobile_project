@@ -1,7 +1,6 @@
-//这个是专门用来发送登录请求的api;建议所有发送请求的方法都抽取出来
-//1.导入发送请求的request文件
+//封装用户详情
 import request from '@/utils/request.js'
-//2.封装登录的函数
+//用户登录
 function userLogin({
     mobile,
     code
@@ -15,7 +14,28 @@ function userLogin({
         }
     });
 }
+//关注用户
+function getFollow(target) {
+    return request({
+        url: 'v1_0/user/followings',
+        method: 'POST',
+        data: {
+            target
+        }
+    })
+}
+//取消关注
+function noFollow(autId) {
+    return request({
+        url: `v1_0/user/followings/${autId}`,
+        method: 'DELETE',
+
+    })
+}
+
 //3.暴露接口 如果没有写default就用{}对象
 export {
-    userLogin
+    userLogin,
+    getFollow,
+    noFollow
 }

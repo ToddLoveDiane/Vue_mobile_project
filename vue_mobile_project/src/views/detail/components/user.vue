@@ -5,21 +5,19 @@
         <div class="bar">
           <!-- 图片 -->
           <div class="img">
-            <img
-              src="https://static.zhihu.com/heifetz/assets/apple-touch-icon-152.67c7b278.png"
-              alt
-            />
+            <img :src="obj.aut_photo" alt />
           </div>
           <!-- 用户详情 -->
           <div class="nickname">
             <van-cell>
-              <template slot="title">我吃西红柿</template>
-              <template slot="label">11:11:11 来自iphone客户端</template>
+              <template slot="title">{{obj.aut_name}}</template>
+              <template slot="label">{{obj.pubdate | dateformat}} 来自iphone客户端</template>
             </van-cell>
           </div>
           <!-- 关注按钮 -->
           <div class="btn">
-            <van-button icon="plus" size="normal">关注</van-button>
+            <van-button v-if="obj.is_followed===false" type="primary" @click="toFollow" icon="plus" size="normal">关注</van-button>
+            <van-button v-else @click="outFollow" class="cancel" size="normal">取消关注</van-button>
           </div>
         </div>
       </template>
@@ -28,7 +26,37 @@
 </template>
 
 <script>
-export default {};
+import { getFollow, noFollow } from "@/api/userInfo";
+export default {
+  props: ["obj"],
+  data() {
+    return {};
+  },
+  methods: {
+    async toFollow() {
+      try {
+        await getFollow(this.obj.aut_id);
+        //行内不能用this
+        this.obj.is_followed = true;
+        this.$toast.success("关注成功");
+      } catch (error) {
+        this.$toast.fail("网络超时,请重试");
+      }
+    },
+    async outFollow() {
+      try {
+        await noFollow(this.obj.aut_id);
+        //行内不能用this
+        this.obj.is_followed = false;
+        this.$toast.success("取关成功");
+        console.log(this.obj.is_followed);
+      } catch (error) {
+        this.$toast.fail("取关失败");
+        console.log(error);
+      }
+    }
+  }
+};
 </script>
 
 <style lang='less' scoped>
@@ -44,6 +72,10 @@ export default {};
   }
   .nickname {
     flex: 1;
+  }
+  .cancel {
+    background-color: #eee;
+    border-radius: 5px;
   }
 }
 </style>

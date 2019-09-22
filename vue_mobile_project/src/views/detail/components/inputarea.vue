@@ -39,7 +39,7 @@ export default {
 
 <style lang="less" scoped>
 .bottom {
-  position: absolute;
+  position: fixed;
   bottom: 0;
   left: 0;
 }

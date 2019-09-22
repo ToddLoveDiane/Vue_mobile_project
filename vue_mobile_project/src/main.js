@@ -31,6 +31,9 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 Vue.filter('timeformat', value => {
   return dayjs().from(dayjs(value))
 })
+Vue.filter("dateformat", function (value) {
+  return dayjs(value).format('MM-DD hh:mm')
+});
 //导入我们自己的插件
 import myPlugin from '@/utils/gLogin.js'
 //use一下

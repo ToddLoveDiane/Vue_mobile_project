@@ -5,11 +5,11 @@
     <!-- 标题 -->
     <van-cell>
       <template slot="title">
-        <div class="mytitle">我是标题栏打算看来大家奥克兰圣诞节快乐就立刻</div>
+        <div class="mytitle">{{articleList.title}}</div>
       </template>
     </van-cell>
     <!-- 用户信息 -->
-    <user></user>
+    <user :obj="articleList"></user>
     <!-- 文章内容不需要抽取 -->
     <van-cell>
       <template slot="title">
@@ -19,7 +19,12 @@
     <!-- 点赞和喜欢按钮 -->
     <likebtn></likebtn>
     <!--评论专区 -->
-    <comment></comment>
+    <van-list v-model="loading" :finished="finished" finished-text="没有更多了" @load="loadComment">
+      <div v-for="(item, index) in 5" :key="index">
+        <comment></comment>
+      </div>
+    </van-list>
+
     <!-- 输入专区 -->
     <inputarea></inputarea>
   </div>
@@ -30,6 +35,7 @@ import user from "@/views/detail/components/user";
 import likebtn from "@/views/detail/components/likebtn";
 import comment from "@/views/detail/components/comment";
 import inputarea from "@/views/detail/components/inputarea";
+import { getDetail } from "@/api/articleList";
 
 export default {
   components: {
@@ -37,6 +43,33 @@ export default {
     likebtn,
     comment,
     inputarea
+  },
+  data() {
+    return {
+      loading: false,
+      finished: false,
+      artId: this.$route.params.art_id,
+      articleList: {},
+      // 保存文章的详情
+    };
+  },
+  methods: {
+    //一进来就请求文章数据
+    async getArticleDetail() {
+      try {
+        let res = await getDetail(this.artId);
+        console.log(res);
+        this.articleList = res;
+      } catch (error) {
+        this.$toast.fail("网络超时,请重新加载哦");
+      }
+    },
+    loadComment() {
+      console.log(111);
+    }
+  },
+  mounted() {
+    this.getArticleDetail();
   }
 };
 </script>

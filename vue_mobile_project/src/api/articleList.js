@@ -80,6 +80,13 @@ function searchKey({
     })
 
 }
+//获取文章详情
+function getDetail(artId){
+    return request({
+        url:`v1_0/articles/${artId}`,
+        method:'GET'
+    })
+}
 export {
     getArticle,
     hideArticle,
@@ -87,4 +94,5 @@ export {
     blackList,
     likeKeyWord,
     searchKey,
+    getDetail
 }
